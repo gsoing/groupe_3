@@ -38,7 +38,7 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
                 .authorizeRequests()
                 .antMatchers("/api/**/public").permitAll()
                 .antMatchers("/api/**/user").hasRole("editor")
-                .antMatchers("/api/**/admin").hasRole("editor")
+                .antMatchers("/api/**/admin").hasRole("reviewer")
                 .and()
                 .httpBasic()
                 .and()
