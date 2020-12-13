@@ -21,10 +21,10 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("kadia").password(passwordEncoder().encode("kadia"))
-                .roles("editor");
+                .roles("EDITOR");
         auth.inMemoryAuthentication()
                 .withUser("david").password(passwordEncoder().encode("david"))
-                .roles("reviewer");
+                .roles("REVIEWER");
     }
 
     @Override
@@ -37,8 +37,8 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/**/public").permitAll()
-                .antMatchers("/api/**/user").hasRole("editor")
-                .antMatchers("/api/**/admin").hasRole("reviewer")
+                .antMatchers("/api/**/user").hasRole("EDITOR")
+                .antMatchers("/api/**/admin").hasRole("REVIEWER")
                 .and()
                 .httpBasic()
                 .and()
