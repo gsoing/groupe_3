@@ -12,14 +12,30 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(EditorEndpoint.PATH)
+@RequestMapping(DocumentApiController.PATH)
 @Slf4j
-public class EditorEndpoint {
+public class DocumentApiController {
 
     public static final String PATH = "/api/v1/admin";
 
     @GetMapping
     public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
+        return ResponseEntity
+                .ok(
+                        UserDto.builder()
+                                .username(authentication.getName())
+                                .roles(
+                                        authentication.getAuthorities()
+                                                .stream()
+                                                .map(GrantedAuthority::getAuthority)
+                                                .collect(Collectors.toList())
+                                )
+                                .build());
+    }
+
+    @GetMapping
+    @RequestMapping("/auth")
+    public ResponseEntity<UserDto> getCurrentUser2(Authentication authentication) {
         return ResponseEntity
                 .ok(
                         UserDto.builder()
