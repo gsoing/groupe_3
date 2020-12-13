@@ -1,13 +1,15 @@
 package com.episen.tp2gestionconcurrence.endpoint;
 
 import com.episen.tp2gestionconcurrence.dto.UserDto;
+import com.episen.tp2gestionconcurrence.model.Document;
+import com.episen.tp2gestionconcurrence.model.DocumentsList;
+import com.episen.tp2gestionconcurrence.model.Lock;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
 
@@ -16,7 +18,70 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DocumentApiController {
 
-    public static final String PATH = "/api/v1/admin";
+    public static final String PATH = "/documents";
+
+    @RequestMapping(
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<DocumentsList> documentsGet(){
+        return new ResponseEntity<DocumentsList>(HttpStatus.ACCEPTED);
+    }
+    @RequestMapping(
+            consumes = { "application/json" },
+            produces = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<DocumentsList> documentsPost(@RequestBody Document document){
+        return new ResponseEntity<DocumentsList>(HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(value = "/{documentId}",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<Document> documentsDocumentIdGet(@PathVariable("documentId") String documentId){
+        return new ResponseEntity<Document>(HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(value = "/{documentId}",
+            consumes = { "application/json" },
+            produces = { "application/json" },
+            method = RequestMethod.PUT)
+    ResponseEntity<Document> documentsDocumentIdPut(@PathVariable("documentId") String documentId, @RequestBody Document document){
+        return new ResponseEntity<Document>(HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(value = "/{documentId}/status",
+            consumes = { "text/plain" },
+            produces = { "application/json" },
+            method = RequestMethod.PUT)
+    ResponseEntity<Document> documentsDocumentIdStatusPut(@PathVariable("documentId") String documentId, @RequestBody Document.StatusEnum document){
+        return new ResponseEntity<Document>(HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(
+            value="/{documentId}/lock",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<Lock> documentsDocumentIdLockGet(){
+        return new ResponseEntity<Lock>(HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(
+            value="/{documentId}/lock",
+            consumes = { "application/json" },
+            produces = { "application/json" },
+            method = RequestMethod.PUT)
+    ResponseEntity<Lock> documentsDocumentIdLockPut(@PathVariable("documentId") String documentId, @RequestBody Lock lock){
+        return new ResponseEntity<Lock>(HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(
+            value="/{documentId}/lock",
+            consumes = { "application/json" },
+            produces = { "application/json" },
+            method = RequestMethod.DELETE)
+    ResponseEntity<Lock> documentsDocumentIdLockDelete(@PathVariable("documentId") String documentId){
+        return new ResponseEntity<Lock>(HttpStatus.ACCEPTED);
+    }
 
     @GetMapping
     public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
