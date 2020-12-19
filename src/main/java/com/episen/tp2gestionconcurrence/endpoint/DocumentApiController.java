@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -48,7 +50,9 @@ public class DocumentApiController {
             produces = { "application/json" },
             method = RequestMethod.POST)
     ResponseEntity<DocumentsList> documentsPost(@RequestBody Document document){
-        return new ResponseEntity<DocumentsList>(HttpStatus.ACCEPTED);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(documentService.documentsPost(document));
     }
 
     @RequestMapping(value = "/{documentId}",
@@ -78,7 +82,7 @@ public class DocumentApiController {
             value="/{documentId}/lock",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<Lock> documentsDocumentIdLockGet(){
+    ResponseEntity<Lock> documentsDocumentIdLockGet(@PathVariable("documentId") String documentId){
         return new ResponseEntity<Lock>(HttpStatus.ACCEPTED);
     }
 

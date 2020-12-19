@@ -1,20 +1,18 @@
 package com.episen.tp2gestionconcurrence.model;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-@Entity(name="Document")
 @Data
 public class Document implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private String documentId;
 
-    private OffsetDateTime created;
-    private OffsetDateTime updated;
+    private LocalDateTime created;
+    private LocalDateTime updated;
     private String title;
     private String creator;
     private String editor;
@@ -43,5 +41,14 @@ public class Document implements Serializable {
             }
             return null;
         }
+    }
+
+    public DocumentSummary getSummary(){
+        return DocumentSummary.builder()
+                .documentId(documentId)
+                .created(created)
+                .updated(updated)
+                .title(title)
+                .build();
     }
 }
