@@ -4,12 +4,18 @@ import com.episen.tp2gestionconcurrence.dto.UserDto;
 import com.episen.tp2gestionconcurrence.model.Document;
 import com.episen.tp2gestionconcurrence.model.DocumentsList;
 import com.episen.tp2gestionconcurrence.model.Lock;
+import com.episen.tp2gestionconcurrence.service.DocumentService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.stream.Collectors;
 
@@ -20,10 +26,21 @@ public class DocumentApiController {
 
     public static final String PATH = "/documents";
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private DocumentService documentService;
+
     @RequestMapping(
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<DocumentsList> documentsGet(){
+    ResponseEntity<DocumentsList> documentsGet(@RequestParam(value = "page", required = false) Integer page,
+                                               @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                               UriComponentsBuilder uriComponentsBuilder){
+        Pageable pageable = PageRequest.of(page, pageSize);
+        DocumentsList pageResult = documentService.documentsGet(pageable);
+
         return new ResponseEntity<DocumentsList>(HttpStatus.ACCEPTED);
     }
     @RequestMapping(

@@ -2,11 +2,17 @@ package com.episen.tp2gestionconcurrence.model;
 
 import lombok.Data;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
-
+@Entity(name="Document")
 @Data
-public class Document {
+public class Document implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private String documentId;
+
     private OffsetDateTime created;
     private OffsetDateTime updated;
     private String title;
