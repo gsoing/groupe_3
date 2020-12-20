@@ -36,6 +36,8 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeRequests()
+                .antMatchers("/documents/**").hasAnyRole("EDITOR","REVIEWER")
+                .antMatchers("/documents/{documentId}/status").hasRole("REVIEWER")
                 .antMatchers("/api/**/admin").hasRole("REVIEWER")
                 .antMatchers("/api/**/admin/auth").authenticated()
                 .and()
