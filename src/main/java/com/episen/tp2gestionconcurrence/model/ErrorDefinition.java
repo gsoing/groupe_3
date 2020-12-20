@@ -1,13 +1,17 @@
 package com.episen.tp2gestionconcurrence.model;
 
+import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
+@Builder
 public class ErrorDefinition {
     private ErrorTypeEnum errorType;
-    private ErrorDefinitionErrors errors;
+    private List<ErrorDefinitionError> errors;
 
-    private enum ErrorTypeEnum {
+    public enum ErrorTypeEnum {
         TECHNICAL("TECHNICAL"),
         FUNCTIONAL("FUNCTIONAL");
 
