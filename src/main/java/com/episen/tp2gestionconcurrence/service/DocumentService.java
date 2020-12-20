@@ -77,6 +77,7 @@ public class DocumentService {
         if (toUpdateDocument.getStatus().equals(Document.StatusEnum.VALIDATED))
             throw new DocumentCannotBeModifiedException();
         toUpdateDocument.setStatus(documentStatus);
+        documentRepository.save(toUpdateDocument);
         return;
 
     }
