@@ -100,6 +100,7 @@ public class DocumentApiController {
             produces = { "application/json" },
             method = RequestMethod.GET)
     ResponseEntity<Lock> documentsDocumentIdLockGet(@PathVariable("documentId") String documentId){
+        log.info("GET /documents/{documentId}/lock :  document id :" + documentId);
         Optional<Lock> lock = lockService.getLock(documentId);
         if(lock.isPresent()) {
             log.info("Get Lock Document:"+ lock.toString());
@@ -115,6 +116,7 @@ public class DocumentApiController {
             produces = { "application/json" },
             method = RequestMethod.PUT)
     ResponseEntity<Lock> documentsDocumentIdLockPut(@PathVariable("documentId") String documentId){
+        log.info("PUT /documents/{documentId}/lock : document id '" + documentId );
         Lock lock = lockService.lock(documentId);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -127,39 +129,10 @@ public class DocumentApiController {
             produces = { "application/json" },
             method = RequestMethod.DELETE)
     ResponseEntity<Lock> documentsDocumentIdLockDelete(@PathVariable("documentId") String documentId){
+        log.info("DELETE /documents/{documentId}/lock :  document id '" + documentId);
         lockService.unLock(documentId);
         return new ResponseEntity<Lock>(HttpStatus.ACCEPTED);
     }
 
-    @GetMapping
-    @RequestMapping("/auth2")
-    public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
-        return ResponseEntity
-                .ok(
-                        UserDto.builder()
-                                .username(authentication.getName())
-                                .roles(
-                                        authentication.getAuthorities()
-                                                .stream()
-                                                .map(GrantedAuthority::getAuthority)
-                                                .collect(Collectors.toList())
-                                )
-                                .build());
-    }
 
-    @GetMapping
-    @RequestMapping("/auth")
-    public ResponseEntity<UserDto> getCurrentUser2(Authentication authentication) {
-        return ResponseEntity
-                .ok(
-                        UserDto.builder()
-                                .username(authentication.getName())
-                                .roles(
-                                        authentication.getAuthorities()
-                                                .stream()
-                                                .map(GrantedAuthority::getAuthority)
-                                                .collect(Collectors.toList())
-                                )
-                                .build());
-    }
 }
