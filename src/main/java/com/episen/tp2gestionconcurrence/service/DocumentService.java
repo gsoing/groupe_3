@@ -1,5 +1,6 @@
 package com.episen.tp2gestionconcurrence.service;
 
+import com.episen.tp2gestionconcurrence.exception.DocumentCannotBeModifiedException;
 import com.episen.tp2gestionconcurrence.exception.DocumentNotFoundException;
 import com.episen.tp2gestionconcurrence.model.Document;
 import com.episen.tp2gestionconcurrence.model.DocumentSummary;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -60,12 +63,13 @@ public class DocumentService {
 
     public Document updateDocumentById(String documentId, Document document) {
         Document toUpdateDocument = documentRepository.findByDocumentId(documentId).orElseThrow(DocumentNotFoundException::new);
+        if (toUpdateDocument.getStatus().equals(Document.StatusEnum.VALIDATED))
+            throw new DocumentCannotBeModifiedException();
         toUpdateDocument.setTitle(document.getTitle());
         toUpdateDocument.setBody(document.getBody());
         toUpdateDocument.setUpdated(LocalDateTime.now());
         toUpdateDocument.setEditor(getUserDetails().getUsername());
-        documentRepository.save(toUpdateDocument);
-        return toUpdateDocument;
+        return documentRepository.save(toUpdateDocument);
     }
 
     private UserDetails getUserDetails() {
