@@ -89,9 +89,9 @@ public class DocumentApiController {
             consumes = { "text/plain" },
             produces = { "application/json" },
             method = RequestMethod.PUT)
-    ResponseEntity documentsDocumentIdStatusPut(@PathVariable("documentId") String documentId, @RequestBody Document.StatusEnum documentStatus){
-        //log.info("PUT /documents/{documentId}/status : document id '" + documentId + "' and body '" + body + "'");
-        documentService.updateDocumentStatusById(documentId,documentStatus);
+    ResponseEntity documentsDocumentIdStatusPut(@PathVariable("documentId") String documentId, @RequestBody String documentStatus){
+        log.info("PUT /documents/{documentId}/status : document id '" + documentId + "' and status '" + documentStatus + "'");
+        documentService.updateDocumentStatusById(documentId, Document.StatusEnum.fromValue(documentStatus));
         return ResponseEntity.noContent().build();
     }
 
