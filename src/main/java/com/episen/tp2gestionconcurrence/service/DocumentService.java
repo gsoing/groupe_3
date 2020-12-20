@@ -78,8 +78,19 @@ public class DocumentService {
         return documentRepository.save(toUpdateDocument);
     }
 
+    public void updateDocumentStatusById(String documentId, Document.StatusEnum documentStatus) {
+        Document toUpdateDocument = documentRepository.findByDocumentId(documentId).orElseThrow(DocumentNotFoundException::new);
+        if (toUpdateDocument.getStatus().equals(Document.StatusEnum.VALIDATED))
+            throw new DocumentCannotBeModifiedException();
+        toUpdateDocument.setStatus(documentStatus);
+        return;
+
+    }
+
     private UserDetails getUserDetails() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (UserDetails) authentication.getPrincipal();
     }
+
+
 }
