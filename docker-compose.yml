@@ -4,3 +4,10 @@ services:
     image: mongo
     ports:
       - "27017:27017"
+  docLock:
+    build: .
+    container_name: docLock
+    ports:
+      - "8080:8080"
+    links:
+      - "mongo:mongo"
