@@ -89,7 +89,6 @@ public class DocumentService {
         if (toUpdateDocument.getStatus().equals(Document.StatusEnum.VALIDATED))
             throw new DocumentCannotBeModifiedException();
 
-
         toUpdateDocument.setTitle(document.getTitle());
         toUpdateDocument.setBody(document.getBody());
         toUpdateDocument.setUpdated(LocalDateTime.now());
@@ -99,6 +98,7 @@ public class DocumentService {
 
     public void updateDocumentStatusById(String documentId, Document.StatusEnum documentStatus) {
         Document toUpdateDocument = documentRepository.findByDocumentId(documentId).orElseThrow(DocumentNotFoundException::new);
+
         if (toUpdateDocument.getStatus().equals(Document.StatusEnum.VALIDATED))
             throw new DocumentCannotBeModifiedException();
         toUpdateDocument.setStatus(documentStatus);
