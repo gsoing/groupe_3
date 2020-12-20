@@ -8,8 +8,8 @@ import java.util.List;
 
 public class DocumentNotFoundException extends AbstractDocumentException {
 
-    private static final String NOT_FOUND_CODE= "E1";
-    private static final String NOT_FOUND_MESSAGE = "Unknown document id";
+    private static final String NOT_FOUND_CODE= "err.func.documentnotfound";
+    private static final String NOT_FOUND_MESSAGE = "Unknown document with given id";
 
     public DocumentNotFoundException() {
         super(HttpStatus.NOT_FOUND, ErrorDefinition.builder()

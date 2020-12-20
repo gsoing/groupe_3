@@ -1,9 +1,7 @@
 package com.episen.tp2gestionconcurrence.endpoint;
 
 import com.episen.tp2gestionconcurrence.dto.UserDto;
-import com.episen.tp2gestionconcurrence.model.Document;
-import com.episen.tp2gestionconcurrence.model.DocumentsList;
-import com.episen.tp2gestionconcurrence.model.Lock;
+import com.episen.tp2gestionconcurrence.model.*;
 import com.episen.tp2gestionconcurrence.service.DocumentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -52,22 +51,24 @@ public class DocumentApiController {
     ResponseEntity<DocumentsList> documentsPost(@RequestBody Document document){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(documentService.documentsPost(document));
+                .body(documentService.createDocument(document));
     }
 
     @RequestMapping(value = "/{documentId}",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<Document> documentsDocumentIdGet(@PathVariable("documentId") String documentId){
-        return new ResponseEntity<Document>(HttpStatus.ACCEPTED);
+    ResponseEntity<Object> documentsDocumentIdGet(@PathVariable("documentId") String documentId){
+        Document document = documentService.getDocumentById(documentId);
+        return ResponseEntity.ok(document);
     }
 
     @RequestMapping(value = "/{documentId}",
             consumes = { "application/json" },
             produces = { "application/json" },
             method = RequestMethod.PUT)
-    ResponseEntity<Document> documentsDocumentIdPut(@PathVariable("documentId") String documentId, @RequestBody Document document){
-        return new ResponseEntity<Document>(HttpStatus.ACCEPTED);
+    ResponseEntity<Object> documentsDocumentIdPut(@PathVariable("documentId") String documentId, @RequestBody Document document){
+        Document updatedDocument = documentService.updateDocumentById(documentId, document);
+        return ResponseEntity.ok(updatedDocument);
     }
 
     @RequestMapping(value = "/{documentId}/status",

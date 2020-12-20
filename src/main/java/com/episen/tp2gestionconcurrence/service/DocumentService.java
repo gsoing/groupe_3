@@ -1,5 +1,6 @@
 package com.episen.tp2gestionconcurrence.service;
 
+import com.episen.tp2gestionconcurrence.exception.DocumentNotFoundException;
 import com.episen.tp2gestionconcurrence.model.Document;
 import com.episen.tp2gestionconcurrence.model.DocumentSummary;
 import com.episen.tp2gestionconcurrence.model.DocumentsList;
@@ -36,7 +37,7 @@ public class DocumentService {
         return results;
     }
 
-    public DocumentsList documentsPost(Document document) {
+    public DocumentsList createDocument(Document document) {
         UserDetails userDetails = getUserDetails();
         document.setStatus(Document.StatusEnum.CREATED);
         document.setCreated(LocalDateTime.now());
@@ -45,12 +46,26 @@ public class DocumentService {
         document.setEditor(userDetails.getUsername());
         Document createdDocument = documentRepository.insert(document);
         ArrayList<DocumentSummary> data = new ArrayList<>();
-        data.add(createdDocument.getSummary());
+        data.add(createdDocument.toSummary());
         return DocumentsList.builder()
                 .page(0)
                 .nbElements(1)
                 .data(data)
                 .build();
+    }
+
+    public Document getDocumentById(String documentId) {
+        return documentRepository.findByDocumentId(documentId).orElseThrow(DocumentNotFoundException::new);
+    }
+
+    public Document updateDocumentById(String documentId, Document document) {
+        Document toUpdateDocument = documentRepository.findByDocumentId(documentId).orElseThrow(DocumentNotFoundException::new);
+        toUpdateDocument.setTitle(document.getTitle());
+        toUpdateDocument.setBody(document.getBody());
+        toUpdateDocument.setUpdated(LocalDateTime.now());
+        toUpdateDocument.setEditor(getUserDetails().getUsername());
+        documentRepository.save(toUpdateDocument);
+        return toUpdateDocument;
     }
 
     private UserDetails getUserDetails() {

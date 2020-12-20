@@ -43,7 +43,7 @@ public class Document implements Serializable {
         }
     }
 
-    public DocumentSummary getSummary(){
+    public DocumentSummary toSummary(){
         return DocumentSummary.builder()
                 .documentId(documentId)
                 .created(created)
