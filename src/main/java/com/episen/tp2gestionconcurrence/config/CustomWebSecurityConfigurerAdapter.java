@@ -20,10 +20,10 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("kadia").password(passwordEncoder().encode("kadia"))
+                .withUser("redacteur").password(passwordEncoder().encode("redacteur"))
                 .roles("EDITOR");
         auth.inMemoryAuthentication()
-                .withUser("david").password(passwordEncoder().encode("david"))
+                .withUser("relecteur").password(passwordEncoder().encode("relecteur"))
                 .roles("REVIEWER");
     }
 

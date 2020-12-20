@@ -1,5 +1,6 @@
 package com.episen.tp2gestionconcurrence.config;
 
+import com.episen.tp2gestionconcurrence.repository.EtagEventListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -17,6 +18,11 @@ import java.util.Date;
 @Configuration
 @EnableMongoAuditing
 public class MongoConfiguration {
+
+    @Bean
+    public EtagEventListener createEtagEventListener(){
+        return new EtagEventListener();
+    }
 
     @Bean
     public MongoCustomConversions mongoCustomConversions() {

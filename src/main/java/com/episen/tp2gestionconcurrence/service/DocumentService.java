@@ -1,6 +1,7 @@
 package com.episen.tp2gestionconcurrence.service;
 
 import com.episen.tp2gestionconcurrence.exception.DocumentCannotBeModifiedException;
+import com.episen.tp2gestionconcurrence.exception.DocumentConflictException;
 import com.episen.tp2gestionconcurrence.exception.DocumentForbiddenException;
 import com.episen.tp2gestionconcurrence.exception.DocumentNotFoundException;
 import com.episen.tp2gestionconcurrence.model.Document;
@@ -73,16 +74,24 @@ public class DocumentService {
         return documentRepository.findByDocumentId(documentId).orElseThrow(DocumentNotFoundException::new);
     }
 
-    public Document updateDocumentById(String documentId, Document document) {
+    public Document updateDocumentById(String documentId, Document document, String etag) {
         Document toUpdateDocument = documentRepository.findByDocumentId(documentId).orElseThrow(DocumentNotFoundException::new);
-        //checking lock owner
+        //checking pessimistic lock owner
         lockRepository.findByDocumentId(documentId).ifPresent(lock -> {
             log.info("UPDATE Document:"+ lock.toString());
             if (!lock.getOwner().equals(getUserDetails().getUsername()))
                 throw new DocumentForbiddenException();
         });
+        // checking optimistic lock with etag
+        log.info("UPDATE DOC "+etag);
+        if(!toUpdateDocument.getEtag().equals(etag))
+            throw DocumentConflictException.DEFAULT;
+
+        //checking if Document is already validated
         if (toUpdateDocument.getStatus().equals(Document.StatusEnum.VALIDATED))
             throw new DocumentCannotBeModifiedException();
+
+
         toUpdateDocument.setTitle(document.getTitle());
         toUpdateDocument.setBody(document.getBody());
         toUpdateDocument.setUpdated(LocalDateTime.now());

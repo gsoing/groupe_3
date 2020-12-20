@@ -2,10 +2,10 @@ package com.episen.tp2gestionconcurrence.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 @Data
 public class Document implements Serializable {
     @Id
@@ -18,6 +18,8 @@ public class Document implements Serializable {
     private String editor;
     private String body;
     private StatusEnum status;
+    @Transient
+    private String etag;
 
     public enum StatusEnum{
         CREATED("CREATED"),

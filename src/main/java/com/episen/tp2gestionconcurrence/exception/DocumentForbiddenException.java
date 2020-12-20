@@ -8,12 +8,12 @@ import java.util.List;
 
 public class DocumentForbiddenException extends AbstractDocumentException {
     public static final DocumentForbiddenException DEFAULT = new DocumentForbiddenException();
-    private static final String CANNOT_BE_MODIFIED_CODE = "err.func.forbidden.access";
-    private static final String CANNOT_BE_MODIFIED_MESSAGE = "Forbidden Access";
+    private static final String CODE = "err.func.forbidden.access";
+    private static final String MESSAGE = "Forbidden Access";
 
     public DocumentForbiddenException() {
         super(HttpStatus.BAD_REQUEST, ErrorDefinition.builder()
                 .errorType(ErrorDefinition.ErrorTypeEnum.FUNCTIONAL)
-                .errors(List.of(new ErrorDefinitionError(CANNOT_BE_MODIFIED_CODE, CANNOT_BE_MODIFIED_MESSAGE))).build());
+                .errors(List.of(new ErrorDefinitionError(CODE, MESSAGE))).build());
     }
 }

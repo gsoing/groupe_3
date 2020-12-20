@@ -59,16 +59,24 @@ public class DocumentApiController {
             method = RequestMethod.GET)
     ResponseEntity<Object> documentsDocumentIdGet(@PathVariable("documentId") String documentId){
         Document document = documentService.getDocumentById(documentId);
-        return ResponseEntity.ok(document);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .eTag(document.getEtag())
+                .body(document);
     }
 
     @RequestMapping(value = "/{documentId}",
             consumes = { "application/json" },
             produces = { "application/json" },
             method = RequestMethod.PUT)
-    ResponseEntity<Object> documentsDocumentIdPut(@PathVariable("documentId") String documentId, @RequestBody Document document){
-        Document updatedDocument = documentService.updateDocumentById(documentId, document);
-        return ResponseEntity.ok(updatedDocument);
+    ResponseEntity<Object> documentsDocumentIdPut(@PathVariable("documentId") String documentId,
+                                                  @RequestBody Document document,
+                                                  @RequestHeader(value = "etag", defaultValue = "0") String etag){
+        Document updatedDocument = documentService.updateDocumentById(documentId, document, etag);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .eTag(updatedDocument.getEtag())
+                .body(updatedDocument);
     }
 
     @RequestMapping(value = "/{documentId}/status",

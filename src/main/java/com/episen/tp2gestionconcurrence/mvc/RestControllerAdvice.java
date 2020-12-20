@@ -24,7 +24,8 @@ public class RestControllerAdvice{
                 .errors(List.of(new ErrorDefinitionError("err.tech.mediatypenotacceptable", ex.getMessage()))).build());
     }*/
 
-    @ExceptionHandler({DocumentNotFoundException.class, DocumentCannotBeModifiedException.class, DocumentForbiddenException.class, DocumentLockException.class})
+    @ExceptionHandler({DocumentNotFoundException.class, DocumentCannotBeModifiedException.class,
+            DocumentForbiddenException.class, DocumentLockException.class, DocumentConflictException.class})
     public final ResponseEntity<Object> handleNotFoundException(AbstractDocumentException ex, WebRequest request) {
         return ResponseEntity.status(ex.getHttpStatus()).body(ex.getErrorDefinition());
     }
