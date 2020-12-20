@@ -1,8 +1,6 @@
 package com.episen.tp2gestionconcurrence.mvc;
 
-import com.episen.tp2gestionconcurrence.exception.AbstractDocumentException;
-import com.episen.tp2gestionconcurrence.exception.DocumentCannotBeModifiedException;
-import com.episen.tp2gestionconcurrence.exception.DocumentNotFoundException;
+import com.episen.tp2gestionconcurrence.exception.*;
 import com.episen.tp2gestionconcurrence.model.ErrorDefinition;
 import com.episen.tp2gestionconcurrence.model.ErrorDefinitionError;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +24,7 @@ public class RestControllerAdvice{
                 .errors(List.of(new ErrorDefinitionError("err.tech.mediatypenotacceptable", ex.getMessage()))).build());
     }*/
 
-    @ExceptionHandler({DocumentNotFoundException.class, DocumentCannotBeModifiedException.class})
+    @ExceptionHandler({DocumentNotFoundException.class, DocumentCannotBeModifiedException.class, DocumentForbiddenException.class, DocumentLockException.class})
     public final ResponseEntity<Object> handleNotFoundException(AbstractDocumentException ex, WebRequest request) {
         return ResponseEntity.status(ex.getHttpStatus()).body(ex.getErrorDefinition());
     }

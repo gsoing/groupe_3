@@ -1,11 +1,14 @@
 package com.episen.tp2gestionconcurrence.service;
 
 import com.episen.tp2gestionconcurrence.exception.DocumentCannotBeModifiedException;
+import com.episen.tp2gestionconcurrence.exception.DocumentForbiddenException;
 import com.episen.tp2gestionconcurrence.exception.DocumentNotFoundException;
 import com.episen.tp2gestionconcurrence.model.Document;
 import com.episen.tp2gestionconcurrence.model.DocumentSummary;
 import com.episen.tp2gestionconcurrence.model.DocumentsList;
 import com.episen.tp2gestionconcurrence.repository.DocumentRepository;
+import com.episen.tp2gestionconcurrence.repository.LockRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@Slf4j
 @Service
 public class DocumentService {
     @Autowired
     private DocumentRepository documentRepository;
 
+    @Autowired
+    private LockRepository lockRepository;
 
     public DocumentsList documentsGet(Pageable pageable) {
         Page<Document> pages = documentRepository.findAll(pageable);
@@ -69,6 +75,12 @@ public class DocumentService {
 
     public Document updateDocumentById(String documentId, Document document) {
         Document toUpdateDocument = documentRepository.findByDocumentId(documentId).orElseThrow(DocumentNotFoundException::new);
+        //checking lock owner
+        lockRepository.findByDocumentId(documentId).ifPresent(lock -> {
+            log.info("UPDATE Document:"+ lock.toString());
+            if (!lock.getOwner().equals(getUserDetails().getUsername()))
+                throw new DocumentForbiddenException();
+        });
         if (toUpdateDocument.getStatus().equals(Document.StatusEnum.VALIDATED))
             throw new DocumentCannotBeModifiedException();
         toUpdateDocument.setTitle(document.getTitle());

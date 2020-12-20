@@ -3,6 +3,7 @@ package com.episen.tp2gestionconcurrence.endpoint;
 import com.episen.tp2gestionconcurrence.dto.UserDto;
 import com.episen.tp2gestionconcurrence.model.*;
 import com.episen.tp2gestionconcurrence.service.DocumentService;
+import com.episen.tp2gestionconcurrence.service.LockService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class DocumentApiController {
     public static final String PATH = "/documents";
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private LockService lockService;
 
     @Autowired
     private DocumentService documentService;
@@ -84,7 +85,13 @@ public class DocumentApiController {
             produces = { "application/json" },
             method = RequestMethod.GET)
     ResponseEntity<Lock> documentsDocumentIdLockGet(@PathVariable("documentId") String documentId){
-        return new ResponseEntity<Lock>(HttpStatus.ACCEPTED);
+        Optional<Lock> lock = lockService.getLock(documentId);
+        if(lock.isPresent()) {
+            log.info("Get Lock Document:"+ lock.toString());
+            return ResponseEntity.status(HttpStatus.OK).body(lock.get());
+        }
+        else
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
     @RequestMapping(
@@ -92,8 +99,11 @@ public class DocumentApiController {
             consumes = { "application/json" },
             produces = { "application/json" },
             method = RequestMethod.PUT)
-    ResponseEntity<Lock> documentsDocumentIdLockPut(@PathVariable("documentId") String documentId, @RequestBody Lock lock){
-        return new ResponseEntity<Lock>(HttpStatus.ACCEPTED);
+    ResponseEntity<Lock> documentsDocumentIdLockPut(@PathVariable("documentId") String documentId){
+        Lock lock = lockService.lock(documentId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(lock);
     }
 
     @RequestMapping(
@@ -102,6 +112,7 @@ public class DocumentApiController {
             produces = { "application/json" },
             method = RequestMethod.DELETE)
     ResponseEntity<Lock> documentsDocumentIdLockDelete(@PathVariable("documentId") String documentId){
+        lockService.unLock(documentId);
         return new ResponseEntity<Lock>(HttpStatus.ACCEPTED);
     }
 
