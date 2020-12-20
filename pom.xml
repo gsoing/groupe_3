@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.episen</groupId>
     <artifactId>tp2-gestion-concurrence</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1-RELEASE</version>
     <name>tp2-gestion-concurrence</name>
     <description>TP2 Gestion de la concurrence</description>
 
