@@ -1,26 +1,17 @@
 package com.episen.tp2gestionconcurrence.endpoint;
 
-import com.episen.tp2gestionconcurrence.dto.UserDto;
 import com.episen.tp2gestionconcurrence.model.*;
 import com.episen.tp2gestionconcurrence.service.DocumentService;
 import com.episen.tp2gestionconcurrence.service.LockService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(DocumentApiController.PATH)
