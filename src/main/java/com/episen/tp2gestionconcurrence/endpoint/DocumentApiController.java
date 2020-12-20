@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -36,13 +37,11 @@ public class DocumentApiController {
     @RequestMapping(
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<DocumentsList> documentsGet(@RequestParam(value = "page", required = false) Integer page,
-                                               @RequestParam(value = "pageSize", required = false) Integer pageSize,
+    ResponseEntity<DocumentsList> documentsGet( @PageableDefault(page = 0, size = 20) Pageable pageable,
                                                UriComponentsBuilder uriComponentsBuilder){
-        Pageable pageable = PageRequest.of(page, pageSize);
         DocumentsList pageResult = documentService.documentsGet(pageable);
 
-        return new ResponseEntity<DocumentsList>(HttpStatus.ACCEPTED);
+        return ResponseEntity.ok(pageResult);
     }
     @RequestMapping(
             consumes = { "application/json" },
@@ -106,6 +105,7 @@ public class DocumentApiController {
     }
 
     @GetMapping
+    @RequestMapping("/auth2")
     public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
         return ResponseEntity
                 .ok(

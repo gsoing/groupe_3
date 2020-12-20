@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -34,7 +35,12 @@ public class DocumentService {
 
     public DocumentsList fromPageToDocumentsList(Page page) {
         DocumentsList results = new DocumentsList();
-        results.setData((ArrayList<DocumentSummary>) page.getContent());
+        List<Document> docs = page.getContent();
+        ArrayList<DocumentSummary> sums = new ArrayList<>();
+        for (Document d: docs) {
+            sums.add(d.toSummary());
+        }
+        results.setData(sums);
         results.setPage(page.getNumber());
         results.setNbElements((int) page.getTotalElements());
         return results;
