@@ -40,6 +40,7 @@ public class DocumentApiController {
             method = RequestMethod.GET)
     ResponseEntity<DocumentsList> documentsGet( @PageableDefault(page = 0, size = 20) Pageable pageable,
                                                UriComponentsBuilder uriComponentsBuilder){
+        log.info("GET /documents :  (" + pageable.getPageNumber() + "), pageSize(" + pageable.getPageSize() + ")");
         DocumentsList pageResult = documentService.documentsGet(pageable);
 
         return ResponseEntity.ok(pageResult);
@@ -49,6 +50,7 @@ public class DocumentApiController {
             produces = { "application/json" },
             method = RequestMethod.POST)
     ResponseEntity<DocumentsList> documentsPost(@RequestBody Document document){
+        log.info("POST /documents : document " + document.toString());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(documentService.createDocument(document));
@@ -58,6 +60,7 @@ public class DocumentApiController {
             produces = { "application/json" },
             method = RequestMethod.GET)
     ResponseEntity<Object> documentsDocumentIdGet(@PathVariable("documentId") String documentId){
+        log.info("GET /documents/{documentId} :  document id : " + documentId);
         Document document = documentService.getDocumentById(documentId);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -72,6 +75,9 @@ public class DocumentApiController {
     ResponseEntity<Object> documentsDocumentIdPut(@PathVariable("documentId") String documentId,
                                                   @RequestBody Document document,
                                                   @RequestHeader(value = "etag", defaultValue = "0") String etag){
+        log.info("PUT /documents/{documentId} : document id '" + documentId + "' and document '" + document.toString());
+        log.info("PUT /documents/{documentId} : etag: " + etag);
+
         Document updatedDocument = documentService.updateDocumentById(documentId, document, etag);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -84,6 +90,7 @@ public class DocumentApiController {
             produces = { "application/json" },
             method = RequestMethod.PUT)
     ResponseEntity documentsDocumentIdStatusPut(@PathVariable("documentId") String documentId, @RequestBody Document.StatusEnum documentStatus){
+        //log.info("PUT /documents/{documentId}/status : document id '" + documentId + "' and body '" + body + "'");
         documentService.updateDocumentStatusById(documentId,documentStatus);
         return ResponseEntity.noContent().build();
     }

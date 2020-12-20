@@ -78,12 +78,10 @@ public class DocumentService {
         Document toUpdateDocument = documentRepository.findByDocumentId(documentId).orElseThrow(DocumentNotFoundException::new);
         //checking pessimistic lock owner
         lockRepository.findByDocumentId(documentId).ifPresent(lock -> {
-            log.info("UPDATE Document:"+ lock.toString());
             if (!lock.getOwner().equals(getUserDetails().getUsername()))
                 throw new DocumentForbiddenException();
         });
         // checking optimistic lock with etag
-        log.info("UPDATE DOC "+etag);
         if(!toUpdateDocument.getEtag().equals(etag))
             throw DocumentConflictException.DEFAULT;
 
