@@ -17,6 +17,10 @@ import org.springframework.stereotype.Service;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
+/**
+ * Vu que vous importez les mêmes repoository vous auriez pu merger les 2 services Document et Lock
+ */
+
 @Slf4j
 @Service
 public class LockService {

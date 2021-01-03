@@ -20,6 +20,7 @@ public class DocumentApiController {
 
     public static final String PATH = "/documents";
 
+    // Maintenant on passe plutôt par l'injection via constructeur
     @Autowired
     private LockService lockService;
 
@@ -40,13 +41,14 @@ public class DocumentApiController {
             consumes = { "application/json" },
             produces = { "application/json" },
             method = RequestMethod.POST)
+    // pkoi on retourne une liste ici ?
     ResponseEntity<DocumentsList> documentsPost(@RequestBody Document document){
         log.info("POST /documents : document " + document.toString());
+        // On aurait pu retourner l'etag ici aussi
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(documentService.createDocument(document));
     }
-
     @RequestMapping(value = "/{documentId}",
             produces = { "application/json" },
             method = RequestMethod.GET)
@@ -122,6 +124,7 @@ public class DocumentApiController {
     ResponseEntity<Lock> documentsDocumentIdLockDelete(@PathVariable("documentId") String documentId){
         log.info("DELETE /documents/{documentId}/lock :  document id '" + documentId);
         lockService.unLock(documentId);
+        // Sinon NO_CONTENT ca fonctionne aussi
         return new ResponseEntity<Lock>(HttpStatus.ACCEPTED);
     }
 

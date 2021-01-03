@@ -37,6 +37,7 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
                 .and()
                 .authorizeRequests()
                 .antMatchers("/documents/**").hasAnyRole("EDITOR","REVIEWER")
+                // C'est un peu violent comme sécurité car personne ne peut faire de GET sur la ressource mais ok pourquoi pas
                 .antMatchers("/documents/{documentId}/status").hasRole("REVIEWER")
                 .and()
                 .httpBasic()

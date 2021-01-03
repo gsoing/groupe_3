@@ -53,6 +53,7 @@ public class DocumentService {
         return results;
     }
 
+
     public DocumentsList createDocument(Document document) {
         UserDetails userDetails = getUserDetails();
         document.setStatus(Document.StatusEnum.CREATED);
@@ -75,12 +76,14 @@ public class DocumentService {
     }
 
     public Document updateDocumentById(String documentId, Document document, String etag) {
+        // Autant réutiliser la méthode du dessus :D
         Document toUpdateDocument = documentRepository.findByDocumentId(documentId).orElseThrow(DocumentNotFoundException::new);
         //checking pessimistic lock owner
         lockRepository.findByDocumentId(documentId).ifPresent(lock -> {
             if (!lock.getOwner().equals(getUserDetails().getUsername()))
                 throw new DocumentForbiddenException();
         });
+        // C'est bien mais le repository le fait pour vous avec l'attribut annoté Version
         // checking optimistic lock with etag
         if(!toUpdateDocument.getEtag().equals(etag))
             throw DocumentConflictException.DEFAULT;
@@ -96,6 +99,7 @@ public class DocumentService {
         return documentRepository.save(toUpdateDocument);
     }
 
+    //
     public void updateDocumentStatusById(String documentId, Document.StatusEnum documentStatus) {
         Document toUpdateDocument = documentRepository.findByDocumentId(documentId).orElseThrow(DocumentNotFoundException::new);
 
